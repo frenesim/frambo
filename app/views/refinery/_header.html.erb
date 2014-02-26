@@ -15,6 +15,5 @@
       <a class="navbar-brand" href="#"><%= link_to Refinery::Core.site_name, refinery.root_path %></a>
     </div>
   </div>
-  <%= main_menu.to_html %>
-  <%= Refinery::Pages::MenuPresenter.new(refinery_menu_pages, self).to_html %>
+  <%= navigation_menu.to_html %>
 </nav>
