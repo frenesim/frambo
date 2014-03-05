@@ -9,6 +9,9 @@ group :development, :test do
   gem 'sqlite3'
 end
 
+group :production do
+  gem 'pg'
+end
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -24,7 +27,7 @@ end
 
 gem 'jquery-rails'
 
-gem 'twitter-bootstrap-rails'#, :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git', :branch => 'bootstrap3'
+gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git', :branch => 'bootstrap3'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -38,8 +41,9 @@ gem 'twitter-bootstrap-rails'#, :git => 'git://github.com/seyhunak/twitter-boots
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-gem 'debugger'
+group :development do
+  gem "debugger"
+end
 
 # Refinery CMS
 gem 'refinerycms', '~> 2.1.0'
