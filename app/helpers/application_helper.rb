@@ -7,7 +7,7 @@ module ApplicationHelper
     presenter.selected_css = "active"
     presenter.first_css = ""
     presenter.last_css = ""
-    presenter.max_depth = 0 # prevents dropdown menus, which don't render correctly
+    presenter.max_depth = 1 # prevents dropdown menus, which don't render correctly
     presenter
   end
 end
