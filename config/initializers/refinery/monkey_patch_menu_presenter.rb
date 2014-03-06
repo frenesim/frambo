@@ -14,14 +14,14 @@ module Refinery
                       :max_depth, :selected_css, :first_css, :last_css, :list_tag_css,
                       :link_tag_css
       self.dom_id = 'menu'
-      self.css = 'menu clearfix'
-      self.menu_tag = :nav
+      self.css = "collapse navbar-collapse"
+      self.menu_tag = :div
       self.list_tag = :ul
       self.list_item_tag = :li
-      self.selected_css = :selected
+      self.selected_css = 'active'
       self.first_css = :first
       self.last_css = :last
-      self.list_tag_css = 'nav'
+      self.list_tag_css = "nav navbar-nav"
 
       def roots
         config.roots.presence || collection.roots
@@ -56,6 +56,20 @@ module Refinery
         end
       end
 
+      def render_menu_items_children(menu_items)
+        if menu_items.present?
+          content_tag(list_tag, :class => 'dropdown-menu') do
+            menu_items.each_with_index.inject(ActiveSupport::SafeBuffer.new) do |buffer, (item, index)|
+              buffer << render_menu_item(item, index)
+            end
+          end
+        end
+      end
+
+      def render_menu_item_link_dropdown(menu_item)
+        link_to( menu_item.title, context.refinery.url_for(menu_item.url), class: "dropdown-toggle", data: {toggle:"dropdown", target: "#"})
+      end
+
       def render_menu_item_link(menu_item)
         link_to(menu_item.title, context.refinery.url_for(menu_item.url), :class => link_tag_css)
       end
@@ -63,8 +77,9 @@ module Refinery
       def render_menu_item(menu_item, index)
         content_tag(list_item_tag, :class => menu_item_css(menu_item, index)) do
           buffer = ActiveSupport::SafeBuffer.new
-          buffer << render_menu_item_link(menu_item)
-          buffer << render_menu_items(menu_item_children(menu_item))
+          # Check for sub menu
+          menu_item_children(menu_item).empty? ? buffer << render_menu_item_link(menu_item) : buffer << render_menu_item_link_dropdown(menu_item)
+          buffer << render_menu_items_children(menu_item_children(menu_item))
           buffer
         end
       end
@@ -106,6 +121,7 @@ module Refinery
         css = []
 
         css << selected_css if selected_item_or_descendant_item_selected?(menu_item)
+        css << "dropdown" unless menu_item_children(menu_item).empty?
         css << first_css if index == 0
         css << last_css if index == menu_item.shown_siblings.length
 
